@@ -23,24 +23,30 @@ export const Schemas = {
         create: Joi.object<IChef>({
             name: Joi.string().required(),
             image: Joi.string().required(),
-            description: Joi.string().required()
+            description: Joi.string().required(),
+            restaurant: Joi.array()
+                .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+                .required()
         }),
         update: Joi.object<IChef>({
             name: Joi.string().required(),
             image: Joi.string().required(),
-            description: Joi.string().required()
+            description: Joi.string().required(),
+            restaurant: Joi.array()
+                .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+                .required()
         })
     },
     restaurant: {
         create: Joi.object<IRestaurant>({
             name: Joi.string().required(),
-            chef: Joi.string()
-                .regex(/^[0-9a-fA-F]{24}$/)
-                .required(),
             opens: Joi.string().required(),
             closes: Joi.string().required(),
             thumb: Joi.string().required(),
             image: Joi.string().required(),
+            dishes: Joi.array()
+                .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+                .required(),
             reviews: Joi.array(),
             latitude: Joi.string().required(),
             longitude: Joi.string().required(),
@@ -51,13 +57,13 @@ export const Schemas = {
         }),
         update: Joi.object<IRestaurant>({
             name: Joi.string().required(),
-            chef: Joi.string()
-                .regex(/^[0-9a-fA-F]{24}$/)
-                .required(),
             opens: Joi.string().required(),
             closes: Joi.string().required(),
             thumb: Joi.string().required(),
             image: Joi.string().required(),
+            dishes: Joi.array()
+                .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+                .required(),
             reviews: Joi.array(),
             latitude: Joi.string().required(),
             longitude: Joi.string().required(),
@@ -70,9 +76,6 @@ export const Schemas = {
     dish: {
         create: Joi.object<IDish>({
             name: Joi.string().required(),
-            restaurant: Joi.string()
-                .regex(/^[0-9a-fA-F]{24}$/)
-                .required(),
             ingredients: Joi.string().required(),
             image: Joi.string().required(),
             icon: Joi.string().required(),
@@ -80,9 +83,6 @@ export const Schemas = {
         }),
         update: Joi.object<IDish>({
             name: Joi.string().required(),
-            restaurant: Joi.string()
-                .regex(/^[0-9a-fA-F]{24}$/)
-                .required(),
             ingredients: Joi.string().required(),
             image: Joi.string().required(),
             icon: Joi.string().required(),

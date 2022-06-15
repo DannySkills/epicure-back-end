@@ -1,66 +1,56 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import Chef from '../models/chef.model';
+import { ChefService } from '../services/chef.service';
 
-const createChef = (req: Request, res: Response, next: NextFunction) => {
-    const { name, image, description } = req.body;
-
-    const chef = new Chef({
-        _id: new mongoose.Types.ObjectId(),
-        name,
-        image,
-        description
-    });
-
-    return chef
-        .save()
-        .then((chef) => res.status(201).json({ chef }))
-        .catch((error) => res.status(500).json({ error }));
+const createChef = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { name, image, description } = req.body;
+        const addedChef = await ChefService.createChef({ name, image, description });
+        res.status(201).json({ chef: addedChef });
+    } catch (err) {
+        return res.status(500).json({ error: 'Failed to add chef' });
+    }
 };
-const readChef = (req: Request, res: Response, next: NextFunction) => {
-    const chefId = req.params.chefId;
+const readChef = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const chefId = req.params.chefId;
+        console.log(chefId);
 
-    return (
-        Chef.findById(chefId)
-            // .populate('restaurant')
-            // .select('-__v')
-            .then((chef) => (chef ? res.status(200).json({ chef }) : res.status(404).json({ message: 'Chef not found' })))
-            .catch((error) => res.status(500).json({ error }))
-    );
+        const chef = await ChefService.getChefById(chefId);
+        console.log(chef);
+        res.status(200).json({ chef });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to get chef' });
+    }
 };
-const readAll = (req: Request, res: Response, next: NextFunction) => {
-    return (
-        Chef.find()
-            // .populate('restaurant')
-            // .select('-__v')
-            .then((chefs) => res.status(200).json({ chefs }))
-            .catch((error) => res.status(500).json({ error }))
-    );
+const readAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const chefs = await ChefService.getChefs();
+        res.status(200).json({ chefs });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get chefs' });
+    }
 };
-const updateChef = (req: Request, res: Response, next: NextFunction) => {
-    const chefId = req.params.chefId;
+const updateChef = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const chefId = req.params.chefId;
+        const updatedChef = await ChefService.updateChef(chefId, req.body);
+        console.log(updatedChef);
 
-    return Chef.findById(chefId)
-        .then((chef) => {
-            if (chef) {
-                chef.set(req.body);
-
-                return chef
-                    .save()
-                    .then((chef) => res.status(201).json({ chef }))
-                    .catch((error) => res.status(500).json({ error }));
-            } else {
-                res.status(404).json({ message: 'Not found' });
-            }
-        })
-        .catch((error) => res.status(500).json({ error }));
+        res.status(200).json({ chef: updatedChef });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update chef' });
+    }
 };
-const deleteChef = (req: Request, res: Response, next: NextFunction) => {
-    const chefId = req.params.chefId;
-
-    return Chef.findByIdAndDelete(chefId)
-        .then((chef) => (chef ? res.status(201).json({ message: 'deleted' }) : res.status(404).json({ message: 'Not found' })))
-        .catch((error) => res.status(500).json({ error }));
+const deleteChef = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const chefId = req.params.chefId;
+        const chef = await ChefService.deleteChef(chefId);
+        chef ? res.status(200).json({ message: 'Chef deleted successfully' }) : res.status(404).json({ message: 'Chef not found' });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to delete chef' });
+    }
 };
 
 export default {

@@ -23,16 +23,20 @@ const createDish = (req: Request, res: Response, next: NextFunction) => {
 const readDish = (req: Request, res: Response, next: NextFunction) => {
     const dishId = req.params.dishId;
 
-    return Dish.findById(dishId)
-        .populate('restaurant', '_id')
-        .then((dish) => (dish ? res.status(200).json({ dish }) : res.status(404).json({ message: 'Dish not found' })))
-        .catch((error) => res.status(500).json({ error }));
+    return (
+        Dish.findById(dishId)
+            // .populate('restaurant', '_id')
+            .then((dish) => (dish ? res.status(200).json({ dish }) : res.status(404).json({ message: 'Dish not found' })))
+            .catch((error) => res.status(500).json({ error }))
+    );
 };
 const readAll = (req: Request, res: Response, next: NextFunction) => {
-    return Dish.find()
-        .populate('restaurant', '_id')
-        .then((dishs) => res.status(200).json({ dishs }))
-        .catch((error) => res.status(500).json({ error }));
+    return (
+        Dish.find()
+            // .populate('restaurant', '_id')
+            .then((dishs) => res.status(200).json({ dishs }))
+            .catch((error) => res.status(500).json({ error }))
+    );
 };
 const updateDish = (req: Request, res: Response, next: NextFunction) => {
     const dishId = req.params.dishId;

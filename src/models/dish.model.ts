@@ -2,7 +2,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IDish {
     name: string;
-    restaurant: string;
     ingredients: string;
     image: string;
     icon: string;
@@ -14,7 +13,6 @@ export interface IDishModel extends IDish, Document {}
 const DishSchema = new Schema(
     {
         name: { type: String, required: true },
-        restaurant: { type: Schema.Types.ObjectId, required: true, ref: 'Restaurant' },
         ingredients: { type: String, required: true },
         image: { type: String, required: true },
         icon: { type: String, required: true },

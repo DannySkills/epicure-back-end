@@ -33,7 +33,7 @@ const readRestaurant = (req: Request, res: Response, next: NextFunction) => {
 
     return (
         Restaurant.findById(restaurantId)
-            .populate('chef', '_id')
+            .populate('dish', '_id')
             // .select('-__v')
             .then((restaurant) => (restaurant ? res.status(200).json({ restaurant }) : res.status(404).json({ message: 'Restaurant not found' })))
             .catch((error) => res.status(500).json({ error }))
@@ -42,7 +42,7 @@ const readRestaurant = (req: Request, res: Response, next: NextFunction) => {
 const readAll = (req: Request, res: Response, next: NextFunction) => {
     return (
         Restaurant.find()
-            .populate('chef', '_id')
+            .populate('dish', '_id')
             // .select('-__v')
             .then((restaurants) => res.status(200).json({ restaurants }))
             .catch((error) => res.status(500).json({ error: error.message }))
